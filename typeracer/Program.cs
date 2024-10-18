@@ -1,13 +1,54 @@
-﻿using ClassLibrary;
-
-class Program
+﻿namespace Typeracer
 {
-    static async Task Main(string[] args)
+    class Program
     {
-        ApiSentences apiSentences = new ApiSentences();
-        string url = "https://api.kanye.rest";
+        static async Task Main(string[] args)
+        {
+            try
+            {
+                Console.Clear();
+                MainMenu menu = new MainMenu();
+                Console.WriteLine(menu.GetMenu());
+                string? userInput = Console.ReadLine();
 
-        string apiData = await apiSentences.sentencesFromApi(url);
-        Console.WriteLine(apiData);
+                if (String.IsNullOrWhiteSpace(userInput))
+                {
+                    throw new ArgumentNullException("Felaktig inmatning, ange '1', '2', '3', '4' eller '5'.");
+                }
+
+                switch (userInput)
+                {
+                    case "1":
+                        Console.Clear();
+                        PlayMenu otherMenu = new PlayMenu();
+                        Console.WriteLine(otherMenu.GetPlayMenu());
+
+                        string? userPlayInput = Console.ReadLine();
+
+                        if (String.IsNullOrWhiteSpace(userPlayInput))
+                        {
+                            throw new ArgumentNullException("Felaktig inmatning, ange '1' eller '2'");
+                        }
+
+                        if (userPlayInput == "1")
+                        {
+                            Console.Clear();
+                            PlayGame playgame = new PlayGame();
+                            await playgame.GetSentences();
+                        }
+                        else if (userPlayInput == "2")
+                        {
+                            Console.WriteLine("Hello");
+                        }
+                        break;
+
+                }
+            }
+            catch
+            {
+
+            }
+                
+        }
     }
 }

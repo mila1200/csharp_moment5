@@ -1,4 +1,4 @@
-﻿namespace ClassLibrary
+﻿namespace Typeracer
 {
     public class ApiSentences
     {

@@ -1,15 +1,18 @@
-﻿namespace Typeracer
+﻿using System.Text.Json;
+
+namespace Typeracer
 {
     public class ApiSentences
     {
+
         //endast tillgänglig inom klassen, variabeln kan inte ändras i efterhand
         private readonly HttpClient client;
 
-        public ApiSentences() 
+        public ApiSentences()
         {
             client = new HttpClient();
         }
-       
+
         public async Task<string> sentencesFromApi(string url)
         {
             try
@@ -21,7 +24,13 @@
                 responseFromApi.EnsureSuccessStatusCode();
 
                 string responseData = await responseFromApi.Content.ReadAsStringAsync();
-                return responseData;
+
+                using (JsonDocument document = JsonDocument.Parse(responseData))
+                {
+                    string quote = document.RootElement.GetProperty("quote").GetString();
+                    return quote;
+                }
+                
             }
             catch (Exception ex)
             {

@@ -11,7 +11,7 @@ namespace Typeracer
         
         public MainMenu()
         {
-            welcomeMessage = "Välkommen till Typeracer!\n";
+            welcomeMessage = "Välkommen till T Y P E R A C E R!\n";
             selectionOne = "1. Spela";
             selectionTwo = "2. Topplista";
             selectionThree = "3. Statistik";

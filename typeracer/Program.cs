@@ -6,8 +6,6 @@
         {
             while (true)
             {
-
-
                 try
                 {
                     Console.Clear();
@@ -35,7 +33,10 @@
 
                                     if (String.IsNullOrWhiteSpace(userPlayInput))
                                     {
-                                        throw new ArgumentNullException("Felaktig inmatning, ange '1' eller '2'");
+                                        Console.WriteLine("Felaktig inmatning, ange '1' eller '2'");
+                                        Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                                        Console.ReadKey();
+                                        continue;
                                     }
 
                                     if (userPlayInput == "1")
@@ -46,9 +47,15 @@
                                     }
                                     else if (userPlayInput == "2")
                                     {
-                                        Console.WriteLine("Hello");
+                                        break;
                                     }
-                                    
+                                    else
+                                    {
+                                        Console.WriteLine("Ogiltigt alternativ, ange '1' eller '2'.");
+                                        Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                                        Console.ReadKey();
+                                        continue;
+                                    }
                                 }
                             }
                             break;

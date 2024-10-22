@@ -8,7 +8,7 @@ namespace Typeracer
         {
             try
             {
-                Console.WriteLine("Tryck Enter för att avbryta.\nFörbered dig...");
+                Console.WriteLine("Tryck Enter under spelet för att avbryta.\nFörbered dig...");
 
                 ApiSentences apiSentences = new ApiSentences();
                 string url = "https://api.kanye.rest";

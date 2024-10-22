@@ -59,6 +59,42 @@
                                 }
                             }
                             break;
+                        case "2":
+                            {
+                                while (true)
+                                {
+
+                                }
+                            }
+                            break;
+                        case "3":
+                            {
+                                while (true)
+                                {
+
+                                }
+                            }
+                            break;
+                        case "4":
+                            {
+                                About about = new About();
+                                Console.WriteLine(about);
+                            }
+                            break;
+                            //avsluta programmet
+                        case "5":
+                            {
+                                Environment.Exit(0);
+                                break;
+                            }
+                        //default om fel inmatning
+                        default:
+                            {
+                                Console.WriteLine("Ogiltigt val, vänligen ange '1', '2', '3', '4' eller '5'");
+                                Console.WriteLine("Tryck på en tangent för att återgå till menyn");
+                                Console.ReadKey();
+                                break;
+                            }
                     }
                 }
                 catch (Exception ex)

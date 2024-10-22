@@ -34,7 +34,7 @@
                         {
                             Console.Clear();
                             PlayGame playgame = new PlayGame();
-                            await playgame.GetSentences();
+                            await playgame.GetSentences(otherMenu.GetPlayMenu());
                         }
                         else if (userPlayInput == "2")
                         {
@@ -44,9 +44,9 @@
 
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.WriteLine($"Ett fel inträffade: {ex.Message}");
             }
                 
         }

@@ -25,10 +25,11 @@ namespace Typeracer
 
                 string responseData = await responseFromApi.Content.ReadAsStringAsync();
 
+                //tar ut meningen från objektet
                 using (JsonDocument document = JsonDocument.Parse(responseData))
                 {
-                    string quote = document.RootElement.GetProperty("quote").GetString();
-                    return quote;
+                    string? quote = document.RootElement.GetProperty("quote").GetString();
+                    return quote ?? string.Empty;
                 }
                 
             }

@@ -8,7 +8,7 @@ namespace Typeracer
         {
             try
             {
-                Console.WriteLine("Förbered dig...");
+                Console.WriteLine("Tryck Enter för att avbryta.\nFörbered dig...");
 
                 ApiSentences apiSentences = new ApiSentences();
                 string url = "https://api.kanye.rest";
@@ -36,8 +36,8 @@ namespace Typeracer
 
         public async Task StartTypingTest(string quote, string playMenu)
         {
-            while (true)
-            {
+            
+            
                 Console.Clear();
                 Console.WriteLine(quote);
 
@@ -45,9 +45,50 @@ namespace Typeracer
                 Stopwatch stopWatchWrite = new Stopwatch();
                 stopWatchWrite.Start();
 
-                string? registeredUserInput = Console.ReadLine();
+                //inmatningen
+                string? registeredUserInput = string.Empty;
 
-                stopWatchWrite.Stop();
+                //lagrar misstagen
+                int mistakes = 0;
+
+                //position i meningen
+                int currentPosition = 0;
+
+                //pågår så länge inte hela meningen har skrivits
+                while (currentPosition < quote.Length)
+                {
+                    //kollar tangentryckningar
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                    
+                    //avbryter om enter
+                    if (keyInfo.Key == ConsoleKey.Enter)
+                    {
+                    //lägger till återstående tecken till misstag
+                    mistakes += (quote.Length - currentPosition);
+                        break;
+                    }
+
+                    //jämför tangenttryckning med förväntat
+                    if (keyInfo.KeyChar != quote[currentPosition])
+                    {
+                        //plussar misstag
+                        mistakes++;
+                    }
+                    else
+                    {
+                        //lägger till korrektinmatning och flyttar fram positionen
+                        registeredUserInput += keyInfo.KeyChar;
+                        currentPosition++;
+                    }
+
+                    Console.Clear();
+                    Console.WriteLine(quote);
+                    Console.WriteLine(registeredUserInput);
+                    Console.WriteLine($"\nAntal felskrivningar: {mistakes}");
+
+                }
+
+                    stopWatchWrite.Stop();
 
                 TimeSpan elapsedTime = stopWatchWrite.Elapsed;
 
@@ -61,34 +102,23 @@ namespace Typeracer
                     return;
                 }
 
-                int typedLength = registeredUserInput.Length;
-
-                //antal felskrivningar
-                int mistakes = 0;
-
-                for (int i = 0; i < quote.Length; i++)
-                {
-                    if (i >= typedLength || quote[i] != registeredUserInput[i])
-                    {
-                        mistakes++;
-                    }
-                }
-
                 //total tid
                 double seconds = elapsedTime.TotalSeconds;
                 //totalt per minut
-                double charactersPerMinute = (typedLength / seconds) * 60;
+                double charactersPerMinute = (registeredUserInput.Length / seconds) * 60;
 
                 Console.Clear();
+                Console.WriteLine("D I T T R E S U L T A T");
                 Console.WriteLine($"\nDet här skulle du skriva: {quote}");
                 Console.WriteLine($"Det här skrev du: {registeredUserInput}");
                 Console.WriteLine($"Tid: {seconds:F2} sekunder");
                 Console.WriteLine($"Hastighet: {charactersPerMinute:F2} tecken/minut");
                 Console.WriteLine($"Antal felskrivningar: {mistakes}");
 
-                break;
-            }
-         
+            Console.WriteLine("\n\nTryck på en tangent för att återgå till spelmenyn.");
+            Console.ReadKey();
+            Console.Clear();
+            Console.WriteLine(playMenu);
         }
 
         public async Task PlayAgain(string playMenu)

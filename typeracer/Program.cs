@@ -1,4 +1,6 @@
-﻿namespace Typeracer
+﻿using System.ComponentModel;
+
+namespace Typeracer
 {
     class Program
     {
@@ -61,20 +63,50 @@
                             break;
                         case "2":
                             {
-                                while (true)
+                                Console.WriteLine("Försöker lägga till användare...");
+                                Console.ReadKey();
+
+                                DatabaseConnection db = new DatabaseConnection();
+                                Console.WriteLine("Ange användarnamn: ");
+                                string? inputUsername = Console.ReadLine();
+
+                                Console.WriteLine("Ange lösenord: ");
+                                string? inputPassword = Console.ReadLine();
+
+                                
+
+                                if (!String.IsNullOrEmpty(inputUsername) && !String.IsNullOrEmpty(inputPassword))
                                 {
+                                    try
+                                    {
+                                        db.addUser(inputUsername, inputPassword);
+                                        Console.WriteLine($"Användare {inputUsername} har lagts till.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine($"Fel vid tillägg av användare: {ex.Message}");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Användarnamn och lösenord får inte vara tomma.");
 
                                 }
+
+                                Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                                Console.ReadKey();
+
                             }
                             break;
                         case "3":
                             {
                                 while (true)
                                 {
-
+                                    Console.WriteLine("hello");
                                 }
                             }
                             break;
+                            //beskriver programmet
                         case "4":
                             {
                                 About about = new About();

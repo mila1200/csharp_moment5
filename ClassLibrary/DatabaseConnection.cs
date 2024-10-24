@@ -22,7 +22,7 @@ namespace Typeracer
 				string createTableQuery = @"CREATE TABLE IF NOT EXISTS users (
 											id	INTEGER PRIMARY KEY AUTOINCREMENT,
 											username VARCHAR(40) NOT NULL UNIQUE,
-											password VARCHAR(25) NOT NULL,
+											password VARCHAR(1000) NOT NULL,
 											besttime DOUBLE,
 											bestspeed DOUBLE,
 											bestmistakes INT,
@@ -49,7 +49,6 @@ namespace Typeracer
 
 				try
 				{
-
 					string insertQuery = "INSERT INTO users (username, password, besttime, bestspeed, bestmistakes, created) VALUES (@username, @password, @besttime, @bestspeed, @bestmistakes, @created);";
 					using (var command = new SqliteCommand(insertQuery, connection))
 					{
@@ -63,11 +62,47 @@ namespace Typeracer
 						command.ExecuteNonQuery();
 					}
 				}
-				catch(Exception ex)
+				catch
 				{
-					throw new Exception($"Kunde inte lägga till användaren: {ex.Message}.");
+					Console.WriteLine($"Kunde inte lägga till användaren.");
 				}
 				return person;
+			}
+		}
+
+		public string GetPasswordHash(string username)
+		{
+			using (var connection = new SqliteConnection(connectionString))
+			{
+				connection.Open();
+
+				try
+				{
+					string selectQuery = "SELECT password FROM users WHERE username = @username;";
+					using (var command = new SqliteCommand(selectQuery, connection))
+					{
+						command.Parameters.AddWithValue("@username", username);
+
+						//hämtar ett enskilt värde med en SQL-fråga
+						object? result = command.ExecuteScalar();
+
+						if (result!= null)
+						{
+							return result.ToString();
+						}
+						else
+						{
+							throw new Exception("Fel vid användarverifiering");
+						}
+						
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"Användaren kunde inte verifieras: {ex.Message}");
+					return string.Empty; 
+				}
+				
 			}
 		}
 	}

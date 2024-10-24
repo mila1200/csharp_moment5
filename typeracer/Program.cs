@@ -11,6 +11,10 @@ namespace Typeracer
                 try
                 {
                     Console.Clear();
+                    Login login = new Login();
+                    login.LoginMenu();
+
+                    
                     MainMenu menu = new MainMenu();
                     Console.WriteLine(menu.GetMenu());
                     string? userInput = Console.ReadLine();
@@ -26,7 +30,6 @@ namespace Typeracer
                             {
                                 while (true)
                                 {
-
                                     Console.Clear();
                                     PlayMenu otherMenu = new PlayMenu();
                                     Console.WriteLine(otherMenu.GetPlayMenu());
@@ -72,8 +75,6 @@ namespace Typeracer
 
                                 Console.WriteLine("Ange lösenord: ");
                                 string? inputPassword = Console.ReadLine();
-
-                                
 
                                 if (!String.IsNullOrEmpty(inputUsername) && !String.IsNullOrEmpty(inputPassword))
                                 {

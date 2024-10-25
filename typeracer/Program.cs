@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Data.Common;
 
 namespace Typeracer
 {
@@ -6,15 +7,34 @@ namespace Typeracer
     {
         static async Task Main(string[] args)
         {
+            int? loggedInUserId = null;
+            DatabaseConnection dbConnection = new DatabaseConnection();
+            bool isLoggedIn = false;
+
             while (true)
             {
                 try
                 {
                     Console.Clear();
-                    Login login = new Login();
-                    login.LoginMenu();
 
-                    
+                    if (!isLoggedIn)
+                    {
+                        Login login = new Login();
+                        loggedInUserId = login.LoginMenu();
+
+                        if (loggedInUserId == null)
+                        {
+                            Console.WriteLine("Inloggningen misslyckades");
+                            Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                            Console.ReadKey();
+                            continue;
+                        }
+                        else
+                        {
+                            isLoggedIn = true;
+                        }
+                    }
+
                     MainMenu menu = new MainMenu();
                     Console.WriteLine(menu.GetMenu());
                     string? userInput = Console.ReadLine();
@@ -27,7 +47,7 @@ namespace Typeracer
                     switch (userInput)
                     {
                         case "1":
-                            {
+                            
                                 while (true)
                                 {
                                     Console.Clear();
@@ -47,7 +67,7 @@ namespace Typeracer
                                     if (userPlayInput == "1")
                                     {
                                         Console.Clear();
-                                        PlayGame playgame = new PlayGame();
+                                        PlayGame playgame = new PlayGame(loggedInUserId);
                                         await playgame.GetSentences(otherMenu.GetPlayMenu());
                                     }
                                     else if (userPlayInput == "2")
@@ -62,72 +82,50 @@ namespace Typeracer
                                         continue;
                                     }
                                 }
-                            }
+                            
                             break;
                         case "2":
+                            Console.Clear();
+                            Console.WriteLine("S T A T I S T I K\n");
+
+                            ShowUserStatistics stats = new ShowUserStatistics();
+
+                            if (loggedInUserId.HasValue)
                             {
-                                Console.WriteLine("Försöker lägga till användare...");
-                                Console.ReadKey();
-
-                                DatabaseConnection db = new DatabaseConnection();
-                                Console.WriteLine("Ange användarnamn: ");
-                                string? inputUsername = Console.ReadLine();
-
-                                Console.WriteLine("Ange lösenord: ");
-                                string? inputPassword = Console.ReadLine();
-
-                                if (!String.IsNullOrEmpty(inputUsername) && !String.IsNullOrEmpty(inputPassword))
-                                {
-                                    try
-                                    {
-                                        db.addUser(inputUsername, inputPassword);
-                                        Console.WriteLine($"Användare {inputUsername} har lagts till.");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine($"Fel vid tillägg av användare: {ex.Message}");
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Användarnamn och lösenord får inte vara tomma.");
-
-                                }
-
-                                Console.WriteLine("Tryck på en tangent för att fortsätta...");
-                                Console.ReadKey();
-
+                                User? currentUser = dbConnection.GetUserStatistics(loggedInUserId.Value);
+                                stats.Display(currentUser);
                             }
-                            break;
-                        case "3":
+                            else
                             {
-                                while (true)
-                                {
-                                    Console.WriteLine("hello");
-                                }
+                                Console.WriteLine("Ingen användare inloggad");
                             }
+
+                            Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                            Console.ReadKey();
                             break;
+
                             //beskriver programmet
-                        case "4":
-                            {
+                        case "3":
+                            
                                 About about = new About();
                                 Console.WriteLine(about);
-                            }
+                            
                             break;
-                            //avsluta programmet
-                        case "5":
-                            {
+                           
+                            //avslutar programmet;
+                        case "4":
+                            
                                 Environment.Exit(0);
                                 break;
-                            }
+                            
                         //default om fel inmatning
                         default:
-                            {
+                            
                                 Console.WriteLine("Ogiltigt val, vänligen ange '1', '2', '3', '4' eller '5'");
                                 Console.WriteLine("Tryck på en tangent för att återgå till menyn");
                                 Console.ReadKey();
                                 break;
-                            }
+                            
                     }
                 }
                 catch (Exception ex)

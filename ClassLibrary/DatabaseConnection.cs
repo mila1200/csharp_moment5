@@ -70,7 +70,7 @@ namespace Typeracer
 			}
 		}
 
-		public string GetPasswordHash(string username)
+		public string? GetPasswordHash(string? username)
 		{
 			using (var connection = new SqliteConnection(connectionString))
 			{
@@ -86,7 +86,7 @@ namespace Typeracer
 						//hämtar ett enskilt värde med en SQL-fråga
 						object? result = command.ExecuteScalar();
 
-						if (result!= null)
+						if (result != null)
 						{
 							return result.ToString();
 						}
@@ -94,16 +94,100 @@ namespace Typeracer
 						{
 							throw new Exception("Fel vid användarverifiering");
 						}
-						
+
 					}
 				}
 				catch (Exception ex)
 				{
 					Console.WriteLine($"Användaren kunde inte verifieras: {ex.Message}");
-					return string.Empty; 
+					return null;
 				}
-				
+
 			}
 		}
-	}
+
+		public User? GetUserStatistics(int userId)
+		{
+			using var connection = new SqliteConnection(connectionString);
+			{
+				connection.Open();
+				string selectQuery = "SELECT id, username, besttime, bestspeed, bestmistakes FROM users WHERE Id = @userId";
+				
+				using (var command = new SqliteCommand(selectQuery, connection))
+				{
+					command.Parameters.AddWithValue("@userId", userId);
+
+					using (var reader = command.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							return new User
+							{
+								Id = reader.GetInt32(0),
+								UserName = reader.GetString(1),
+								BestTime = reader.GetDouble(2),
+								BestSpeed = reader.GetDouble(3),
+								BestMistakes = reader.GetInt32(4)
+							};
+						}
+						else
+						{
+							throw new Exception("Ingen statistik hittades för användaren");
+						}
+					}
+				}
+			}
+
+		}
+
+        public int GetUserId(string username)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT id FROM users WHERE username = @username";
+
+                using (var command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@username", username);
+                    var result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        throw new Exception("Användare hittades inte");
+                    }
+                }
+            }
+        }
+
+		public void UpdateUserStatistics (double bestTime, double bestSpeed, int bestMistakes, int userId)
+		{
+			try
+			{
+				using (var connection = new SqliteConnection(connectionString))
+				{
+					connection.Open();
+					string query = "UPDATE users SET besttime = @BestTime, bestspeed = @BestSpeed, bestmistakes = @BestMistakes WHERE id = @UserId";
+
+					using (var command = new SqliteCommand(query, connection))
+					{
+						command.Parameters.AddWithValue("@BestTime", bestTime);
+						command.Parameters.AddWithValue("@BestSpeed", bestSpeed);
+						command.Parameters.AddWithValue("@BestMistakes", bestMistakes);
+						command.Parameters.AddWithValue("@UserId", userId);
+						command.ExecuteNonQuery();
+
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Fel vid uppdatering av användarstatistik: {ex.Message}");
+			}
+		}	
+    }
 }
+

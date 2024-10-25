@@ -7,7 +7,7 @@ namespace Typeracer
         private DatabaseConnection dbConnection = new DatabaseConnection();
        
         //Logga in
-        public void LoginMenu()
+        public int? LoginMenu()
         {
             bool exitMenu = false;
 
@@ -23,7 +23,7 @@ namespace Typeracer
                     Console.WriteLine("\n3. Avsluta");
                     string? loginInput = Console.ReadLine();
 
-                    if (String.IsNullOrWhiteSpace(loginInput))
+                    if (String.IsNullOrEmpty(loginInput))
                     {
                         Console.WriteLine("Felaktig inmatning, ange '1', '2' eller '3'.");
                         Console.WriteLine("Tryck på en tangent för att återgå till menyn");
@@ -36,20 +36,21 @@ namespace Typeracer
                         case "1":
                             Console.Clear();
                             Console.WriteLine("L O G G A  I N\n");
-                           if(LoginUser()) ;
+                            int? userId = LoginUser();
+                           if(userId != null)
                             {
                                 exitMenu = true;
+                                return userId.Value;
                             }
                             break;
+
                         case "2":
                             Console.Clear();
                             Console.WriteLine("S K A P A  N Y  A N V Ä N D A R E\n");
                             CreateNewUser();
                             break;
 
-
                         case "3":
-
                             Environment.Exit(0);
                             break;
 
@@ -59,15 +60,14 @@ namespace Typeracer
                             Console.WriteLine("Tryck på en tangent för att återgå till menyn");
                             Console.ReadKey();
                             break;
-
                     }
                 }
-
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Ett fel inträffade: {ex.Message}");
                 }
             }
+            return null;
         }
         private void CreateNewUser()
         {
@@ -77,7 +77,7 @@ namespace Typeracer
             Console.WriteLine("\nLösenord: ");
             string? newPassword = Console.ReadLine();
 
-            if (newUsername == null || newPassword == null)
+            if (newUsername == null | newPassword == null)
             {
                 Console.WriteLine("Du måste ange ett användarnamn och lösenord");
                 return;
@@ -99,14 +99,14 @@ namespace Typeracer
             
         }
 
-        public bool VerifyUser(string username, string password)
+        public bool VerifyUser(string? username, string? password)
         {
-             string passwordFromDb = dbConnection.GetPasswordHash(username);
+             string? passwordFromDb = dbConnection.GetPasswordHash(username);
 
             return BCrypt.Net.BCrypt.Verify(password, passwordFromDb);
         }
 
-        private bool LoginUser()
+        private int? LoginUser()
         {
             Console.WriteLine("Användarnamn: ");
             string? loginUsername = Console.ReadLine();
@@ -119,22 +119,34 @@ namespace Typeracer
                 Console.WriteLine("Du måste ange användarnamn och lösenord.");
                 Console.WriteLine("Tryck på valfri tangent för att återgå till menyn");
                 Console.ReadKey();
-                return false; 
+                return null; 
             }
 
             if (VerifyUser(loginUsername, loginPassword))
             {
                 Console.WriteLine("Inloggning lyckades!");
-                return true;
+                int userId = dbConnection.GetUserId(loginUsername);
+                Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
+                Console.ReadKey();
+                Console.Clear();
+                return userId;
             }
             else
             {
                 Console.WriteLine("Fel användarnamn eller lösenord...");
+                Console.WriteLine("Tryck på valfri tangent för att återgå till menyn");
+                Console.ReadKey();
+                
             }
+            
+            return null;
+        }
 
-            Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
-            Console.ReadKey();
-            return false;
+        public void ShowUserStatistics(int userId)
+        {
+            User? userStatistics = dbConnection.GetUserStatistics(userId);
+            ShowUserStatistics showStats = new ShowUserStatistics();
+            showStats.Display(userStatistics);
         }
     }
 }

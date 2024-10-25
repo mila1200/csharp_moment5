@@ -1,9 +1,20 @@
+using System.Data;
 using System.Diagnostics;
 
 namespace Typeracer
 {
     public class PlayGame
     {
+        DatabaseConnection dbConnection = new DatabaseConnection();
+
+        private int loggedInUserId;
+
+        public PlayGame(int? userId)
+        {
+
+            loggedInUserId = userId ?? throw new ArgumentNullException("Det finns ingen inloggad användare");
+        }
+
         public async Task GetSentences(string playMenu)
         {
             try
@@ -36,8 +47,6 @@ namespace Typeracer
 
         public async Task StartTypingTest(string quote, string playMenu)
         {
-            
-            
                 Console.Clear();
                 Console.WriteLine(quote);
 
@@ -114,6 +123,63 @@ namespace Typeracer
                 Console.WriteLine($"Tid: {seconds:F2} sekunder");
                 Console.WriteLine($"Hastighet: {charactersPerMinute:F2} tecken/minut");
                 Console.WriteLine($"Antal felskrivningar: {mistakes}");
+
+            if (loggedInUserId != null)
+            {
+                User? currentUser = dbConnection.GetUserStatistics(loggedInUserId);
+
+                if (currentUser != null)
+                {
+                    double bestTime = currentUser.BestTime ?? double.MaxValue;
+                    double bestSpeed = currentUser.BestSpeed ?? 0;
+                    int bestMistakes = currentUser.BestMistakes ?? int.MaxValue;
+
+                    bool updated = false;
+
+                    if (seconds < bestTime)
+                    {
+                        currentUser.BestTime = seconds;
+                        updated = true;
+                        Console.WriteLine("\nGrattis, du förbättrade din tid!");
+                    }
+
+                    if (charactersPerMinute > bestSpeed)
+                    {
+                        currentUser.BestSpeed = charactersPerMinute;
+                        updated = true;
+                        Console.WriteLine("\nGrattis, du förbättrade din hastighet!");
+                    }
+
+                    if (mistakes < bestMistakes)
+                    {
+                        currentUser.BestMistakes = mistakes;
+                        updated = true;
+                        Console.WriteLine("\nGrattis, du förbättrade din precision!");
+                    }
+
+                    if (updated)
+                    {
+                        dbConnection.UpdateUserStatistics(
+                            currentUser.BestTime ?? 0,
+                            currentUser.BestSpeed ?? 0,
+                            currentUser.BestMistakes ?? 0,
+                            currentUser.Id);
+                        Console.WriteLine("Statistik uppdaterad!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nIngen förbättring registrerad, försök igen.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Fel vid inhämtning av användarstatistik.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Det går inte att läsa in Användar-ID.");
+            }
 
             Console.WriteLine("\n\nTryck på en tangent för att återgå till spelmenyn.");
             Console.ReadKey();

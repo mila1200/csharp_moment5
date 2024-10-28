@@ -1,5 +1,6 @@
 namespace Typeracer
 {
+    //klass som definierar en modell för en användare. Använder standardvärden för att identifiera om användaren inledningsvis har några resultat.
     public class User
     {
         public int Id { get; set; }

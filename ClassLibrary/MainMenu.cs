@@ -1,7 +1,9 @@
 namespace Typeracer
 {
+    //klass för att hantera hvudmenyn
   public class MainMenu
     {
+        //lagrar meddelande och menyval
         public string welcomeMessage;
         public string selectionOne;
         public string selectionTwo;
@@ -17,6 +19,7 @@ namespace Typeracer
             selectionFour = "\n4. Stäng";
         }
 
+        //returnerar en sträng för att läsa ut huvudmenyn
         public string GetMenu()
         {
             return $"{welcomeMessage}\n{selectionOne}\n{selectionTwo}\n{selectionThree}\n{selectionFour}";

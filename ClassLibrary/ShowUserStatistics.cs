@@ -2,8 +2,10 @@ namespace Typeracer
 {
     public class ShowUserStatistics
     {
+        //metod för att läsa ut användarens statistik
         public void Display(User? user)
         {
+            //om användaren inte är null skrivs statistiken ut.
             if (user == null)
             {
                 Console.WriteLine("Ingen användare är inloggad.");

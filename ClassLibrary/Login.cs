@@ -77,20 +77,21 @@ namespace Typeracer
             Console.WriteLine("\nLösenord: ");
             string? newPassword = Console.ReadLine();
 
-            if (newUsername == null | newPassword == null)
+            if (newUsername == null || newPassword == null)
             {
                 Console.WriteLine("Du måste ange ett användarnamn och lösenord");
                 return;
             }
 
-            if (newPassword.Length < 5)
+
+            if (newPassword!.Length < 5)
             {
                 Console.WriteLine("Lösenordet måste vara längre än fem tecken...");
                 return;
             }
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            dbConnection.addUser(newUsername, passwordHash);
+            dbConnection.addUser(newUsername!, passwordHash);
 
             Console.WriteLine("Användare skapad.");
 
@@ -102,6 +103,11 @@ namespace Typeracer
         public bool VerifyUser(string? username, string? password)
         {
              string? passwordFromDb = dbConnection.GetPasswordHash(username);
+
+            if (passwordFromDb == null)
+            {
+                return false;
+            }
 
             return BCrypt.Net.BCrypt.Verify(password, passwordFromDb);
         }
@@ -125,7 +131,7 @@ namespace Typeracer
             if (VerifyUser(loginUsername, loginPassword))
             {
                 Console.WriteLine("Inloggning lyckades!");
-                int userId = dbConnection.GetUserId(loginUsername);
+                int userId = dbConnection.GetUserId(loginUsername!);
                 Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
                 Console.ReadKey();
                 Console.Clear();

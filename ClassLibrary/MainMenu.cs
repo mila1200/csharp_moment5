@@ -19,7 +19,7 @@ namespace Typeracer
 
         public string GetMenu()
         {
-            return ($"{welcomeMessage}\n{selectionOne}\n{selectionTwo}\n{selectionThree}\n{selectionFour}");
+            return $"{welcomeMessage}\n{selectionOne}\n{selectionTwo}\n{selectionThree}\n{selectionFour}";
         }
     }
 }

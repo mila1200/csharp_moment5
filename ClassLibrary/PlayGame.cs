@@ -7,7 +7,7 @@ namespace Typeracer
     {
         DatabaseConnection dbConnection = new DatabaseConnection();
 
-        private int loggedInUserId;
+        private int? loggedInUserId;
 
         public PlayGame(int? userId)
         {
@@ -124,9 +124,9 @@ namespace Typeracer
                 Console.WriteLine($"Hastighet: {charactersPerMinute:F2} tecken/minut");
                 Console.WriteLine($"Antal felskrivningar: {mistakes}");
 
-            if (loggedInUserId != null)
+            if (loggedInUserId.HasValue)
             {
-                User? currentUser = dbConnection.GetUserStatistics(loggedInUserId);
+                User? currentUser = dbConnection.GetUserStatistics(loggedInUserId.Value);
 
                 if (currentUser != null)
                 {
@@ -160,9 +160,9 @@ namespace Typeracer
                     if (updated)
                     {
                         dbConnection.UpdateUserStatistics(
-                            currentUser.BestTime ?? 0,
-                            currentUser.BestSpeed ?? 0,
-                            currentUser.BestMistakes ?? 0,
+                            currentUser.BestTime.GetValueOrDefault(double.MaxValue),
+                            currentUser.BestSpeed.GetValueOrDefault(0),
+                            currentUser.BestMistakes.GetValueOrDefault(int.MaxValue),
                             currentUser.Id);
                         Console.WriteLine("Statistik uppdaterad!");
                     }

@@ -29,14 +29,14 @@ namespace Typeracer
                 using (JsonDocument document = JsonDocument.Parse(responseData))
                 {
                     string? quote = document.RootElement.GetProperty("quote").GetString();
-                    return quote ?? string.Empty;
+                    return quote ?? "Ett fel inträffade";
                 }
                 
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Det uppstod ett fel när API:n anropades: {ex.Message}");
-                return string.Empty;
+                return "Ett fel inträffade";
             }
         }
     }

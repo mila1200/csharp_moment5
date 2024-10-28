@@ -54,9 +54,9 @@ namespace Typeracer
 					{
 						command.Parameters.AddWithValue("@username", username);
 						command.Parameters.AddWithValue("@password", password);
-						command.Parameters.AddWithValue("@besttime", 0);
+						command.Parameters.AddWithValue("@besttime", double.MaxValue);
 						command.Parameters.AddWithValue("@bestspeed", 0);
-						command.Parameters.AddWithValue("@bestmistakes", 0);
+						command.Parameters.AddWithValue("@bestmistakes", int.MaxValue);
 						command.Parameters.AddWithValue("@created", DateTime.Now.ToString("yyyy-MM-ddThh:mm.ss"));
 
 						command.ExecuteNonQuery();
@@ -125,9 +125,9 @@ namespace Typeracer
 							{
 								Id = reader.GetInt32(0),
 								UserName = reader.GetString(1),
-								BestTime = reader.GetDouble(2),
+								BestTime = reader.IsDBNull(2) || reader.GetDouble(2) == double.MaxValue ? null : reader.GetDouble(2),
 								BestSpeed = reader.GetDouble(3),
-								BestMistakes = reader.GetInt32(4)
+								BestMistakes = reader.IsDBNull(4) || reader.GetInt32(4) == int.MaxValue ? null : reader.GetInt32(4)
 							};
 						}
 						else

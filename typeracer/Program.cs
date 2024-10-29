@@ -141,7 +141,7 @@ namespace Typeracer
                         //default om fel inmatning
                         default:
                             
-                                Console.WriteLine("Ogiltigt val, vänligen ange '1', '2', '3', '4' eller '5'");
+                                Console.WriteLine("Ogiltigt val, vänligen ange '1', '2', '3' eller '4');
                                 Console.WriteLine("Tryck på en tangent för att återgå till menyn");
                                 Console.ReadKey();
                                 break;

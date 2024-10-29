@@ -49,7 +49,7 @@ namespace Typeracer
 
                     if (String.IsNullOrWhiteSpace(userInput))
                     {
-                        throw new ArgumentNullException("Felaktig inmatning, ange '1', '2', '3', '4' eller '5'.");
+                        throw new ArgumentNullException("Felaktig inmatning, ange '1', '2', '3' eller 4");
                     }
 
                     //switch som läser av vad användaren väljer.

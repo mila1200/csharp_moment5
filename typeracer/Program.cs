@@ -47,11 +47,6 @@ namespace Typeracer
                     Console.WriteLine(menu.GetMenu());
                     string? userInput = Console.ReadLine();
 
-                    if (String.IsNullOrWhiteSpace(userInput))
-                    {
-                        throw new ArgumentNullException("Felaktig inmatning, ange '1', '2', '3' eller 4");
-                    }
-
                     //switch som läser av vad användaren väljer.
                     switch (userInput)
                     {
@@ -140,8 +135,7 @@ namespace Typeracer
                             
                         //default om fel inmatning
                         default:
-                            
-                                Console.WriteLine("Ogiltigt val, vänligen ange '1', '2', '3' eller '4');
+                                Console.WriteLine("Ogiltigt val, vänligen ange '1', '2', '3' eller '4'");
                                 Console.WriteLine("Tryck på en tangent för att återgå till menyn");
                                 Console.ReadKey();
                                 break;

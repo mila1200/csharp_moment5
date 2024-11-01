@@ -115,7 +115,7 @@ namespace Typeracer
                                 Console.WriteLine("Ingen användare inloggad");
                             }
 
-                            Console.WriteLine("Tryck på en tangent för att fortsätta...");
+                            Console.WriteLine("\nTryck på en tangent för att fortsätta...");
                             Console.ReadKey();
                             break;
 

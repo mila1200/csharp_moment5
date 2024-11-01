@@ -133,7 +133,7 @@ namespace Typeracer
                 Console.WriteLine("D I T T R E S U L T A T");
                 Console.WriteLine($"\nDet här skulle du skriva: {quote}");
                 Console.WriteLine($"Det här skrev du: {registeredUserInput}");
-                Console.WriteLine($"Tid: {seconds:F2} sekunder");
+                Console.WriteLine($"\nTid: {seconds:F2} sekunder");
                 Console.WriteLine($"Hastighet: {charactersPerMinute:F2} tecken/minut");
                 Console.WriteLine($"Antal felskrivningar: {mistakes}");
 
@@ -183,7 +183,7 @@ namespace Typeracer
                             currentUser.BestSpeed.GetValueOrDefault(0),
                             currentUser.BestMistakes.GetValueOrDefault(int.MaxValue),
                             currentUser.Id);
-                        Console.WriteLine("Statistik uppdaterad!");
+                        Console.WriteLine("\nStatistik uppdaterad!");
                     }
                     //visar meddelande om ingen förbättring registreras.
                     else
